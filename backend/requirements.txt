@@ -1,0 +1,6 @@
+asgiref==3.4.1
+Django
+gunicorn
+psycopg2-binary
+sqlparse==0.4.2
+tzdata==2021.5
