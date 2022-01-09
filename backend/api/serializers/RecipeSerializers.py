@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from api.models import Recipe, Ingredient, IngredientAmountForRecipe
+from api.models import Recipe, Ingredient, IngredientAmountForRecipe, Favorite
 from api.serializers import TagSerializer, IngredientAmountForRecipeSerializer
 from users.serializers import CustomUserSerializer
 
@@ -26,7 +26,9 @@ class RecipeSerializer(serializers.ModelSerializer):
                   'cooking_time')
 
     def get_is_favorited(self, obj):
-        # будет добавлено позднее
+        user = self.context.get('request').user
+        if user.is_authenticated:
+            return Recipe.objects.filter(favorites__user=user, id=obj.id).exists()
         return False
 
     def get_is_in_cart(self, obj):
