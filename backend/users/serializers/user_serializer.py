@@ -34,6 +34,8 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -41,5 +43,10 @@ class CustomUserSerializer(UserSerializer):
             'id',
             'username',
             'first_name',
-            'last_name'
+            'last_name',
+            'is_subscribed',
         )
+
+    def get_is_subscribed(self, obj):
+        # заполню, когда будет чем
+        return False
