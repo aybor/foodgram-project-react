@@ -7,3 +7,4 @@ tzdata==2021.5
 djangorestframework
 django-filter
 djoser
+tqdm
