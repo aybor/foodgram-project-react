@@ -1,5 +1,8 @@
+from django.core import validators
 from django.db import models
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class Ingredient(models.Model):
 
@@ -59,3 +62,82 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Recipe(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='recipes',
+        verbose_name='Автор',
+    )
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название'
+    )
+    image = models.ImageField(
+        verbose_name='Фото',
+        upload_to='recipes/',
+        blank=False,
+    )
+    text = models.TextField(
+        verbose_name='Описание'
+    )
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through='IngredientAmountForRecipe',
+        related_name='recipes',
+        verbose_name='Ингредиенты',
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Теги'
+    )
+    cooking_time = models.PositiveIntegerField(
+        validators=(
+            validators.MinValueValidator(
+                1,
+                message='Время не меньше минуты'
+            ),
+        ),
+        verbose_name='Время приготовления'
+    )
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+
+
+class IngredientAmountForRecipe(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        verbose_name='Ингредиент',
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт',
+    )
+    amount = models.PositiveIntegerField(
+        validators=(
+            validators.MinValueValidator(
+                1,
+                message='Минимальное количество: 1'
+            ),
+        )
+    )
+
+    class Meta:
+        verbose_name = 'Количество ингредиента'
+        verbose_name_plural = 'Количество ингредиентов'
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'ingredient',
+                    'recipe',
+                ],
+                name='unique ingredient for recipe'
+            )
+        ]

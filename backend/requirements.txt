@@ -8,3 +8,5 @@ djangorestframework
 django-filter
 djoser
 tqdm
+Pillow
+django-extra-fields
