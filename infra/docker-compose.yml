@@ -25,7 +25,7 @@ services:
     volumes:
       - ../backend/:/app/
 #      - static_value:/app/static/
-#      - media_value:/app/media/
+      - media_value:/app/media/
 
     command: "sh -c 'pip3 install -r requirements.txt --no-cache-dir && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --reload'"
 

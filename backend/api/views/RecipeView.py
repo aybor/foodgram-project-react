@@ -8,11 +8,13 @@ from rest_framework.viewsets import ModelViewSet
 from api.serializers import RecipeSerializer, MiniRecipeSerializer
 from api.models import Recipe, Favorite
 from api.paginators import CustomPageNumberPagination
+from api.filters import RecipeFilter
 
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = CustomPageNumberPagination
+    filter_class = RecipeFilter
     serializer_class = RecipeSerializer
 
     def perform_create(self, serializer):
