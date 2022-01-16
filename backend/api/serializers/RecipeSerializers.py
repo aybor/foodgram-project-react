@@ -17,12 +17,12 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only=True,
     )
     is_favorited = serializers.SerializerMethodField()
-    is_in_cart = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
         fields = ('id', 'tags', 'author', 'ingredients', 'is_favorited',
-                  'is_in_cart', 'name', 'image', 'text',
+                  'is_in_shopping_cart', 'name', 'image', 'text',
                   'cooking_time')
 
     def get_is_favorited(self, obj):
@@ -31,8 +31,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             return Recipe.objects.filter(favorites__user=user, id=obj.id).exists()
         return False
 
-    def get_is_in_cart(self, obj):
-        # будет добавлено позднее
+    def get_is_in_shopping_cart(self, obj):
+        user = self.context.get('request').user
+        if user.is_authenticated:
+            return Recipe.objects.filter(carts__user=user, id=obj.id).exists()
         return False
 
     def validate(self, data):
