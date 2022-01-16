@@ -1,3 +1,5 @@
+from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
@@ -35,6 +37,34 @@ class RecipeViewSet(ModelViewSet):
     )
     def shopping_cart(self, request, pk=None):
         return self.do_action(request=request, model=Cart, pk=pk)
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[IsAuthenticated]
+    )
+    def download_shopping_cart(self, request):
+        user = request.user
+        ingredients = user.carts.values(
+            'recipe__ingredients__name',
+            'recipe__ingredients__measurement_unit',
+        ).order_by('recipe__ingredients__name').annotate(
+            ingredients_sum=Sum('recipe__ingredientamountforrecipe__amount')
+        )
+
+        list_for_shopping = ''
+        for item in ingredients:
+            name = item['recipe__ingredients__name']
+            amount = (
+                    str(item['ingredients_sum']) +
+                    ' ' +
+                    item['recipe__ingredients__measurement_unit']
+            )
+            list_for_shopping += f'{name}: {amount}\n'
+
+        data = list_for_shopping
+
+        return HttpResponse(data, content_type='text/plain')
 
     def create_bond(self, model, user, recipe):
         model.objects.get_or_create(user=user, recipe=recipe)
