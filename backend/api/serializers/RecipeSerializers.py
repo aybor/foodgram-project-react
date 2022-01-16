@@ -38,13 +38,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         return False
 
     def validate(self, data):
+        self.check_required_field('ingredients')
+        self.check_required_field('tags')
+
         ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
-            raise serializers.ValidationError(
-                {
-                    'ingredients': 'Забыли ингредиенты'
-                }
-            )
         ingredient_list = []
         for ingredient in ingredients:
             ingredient_item = get_object_or_404(
@@ -62,6 +59,15 @@ class RecipeSerializer(serializers.ModelSerializer):
                 )
         data['ingredients'] = ingredients
         return data
+
+    def check_required_field(self, field):
+        checking_field = self.initial_data.get(field)
+        if not checking_field:
+            raise serializers.ValidationError(
+                {
+                    field: 'This field is required.'
+                }
+            )
 
     def create_ingredients(self, ingredients, recipe):
         ingredients_list = []
