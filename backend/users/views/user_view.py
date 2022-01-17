@@ -33,22 +33,26 @@ class CustomUserViewSet(UserViewSet):
                         'errors': 'Нельзя подписаться на самого себя'
                     }
                 )
-            follow = Follow.objects.get_or_create(user=user, author=author)
+            if Follow.objects.filter(user=user, author=author).exists():
+                return Response(
+                    {
+                        "errors": "Вы уже подписаны на автора"
+                    }, status=status.HTTP_400_BAD_REQUEST
+                )
+            follow = Follow.objects.create(user=user, author=author)
             serializer = FollowSerializer(
                 follow, context={'request': request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         if request.method == 'DELETE':
             follow = Follow.objects.filter(user=user, author=author)
             if follow.exists():
                 follow.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(
-                {
-                    'errors': 'Такой подписки нет'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({
+                'errors': 'Подписки нет'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         detail=False,

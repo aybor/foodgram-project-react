@@ -11,15 +11,20 @@ from api.serializers import RecipeSerializer, MiniRecipeSerializer
 from api.models import Recipe, Favorite, Cart
 from api.paginators import CustomPageNumberPagination
 from api.filters import RecipeFilter
+from api.permissions import AuthorOrReadOnly
 
 
 class RecipeViewSet(ModelViewSet):
+    permission_classes = (AuthorOrReadOnly,)
     queryset = Recipe.objects.all()
     pagination_class = CustomPageNumberPagination
     filter_class = RecipeFilter
     serializer_class = RecipeSerializer
 
     def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
         serializer.save(author=self.request.user)
 
     @action(
@@ -62,12 +67,14 @@ class RecipeViewSet(ModelViewSet):
             )
             list_for_shopping += f'{name}: {amount}\n'
 
-        data = list_for_shopping
-
-        return HttpResponse(data, content_type='text/plain')
+        return HttpResponse(list_for_shopping, content_type='text/plain')
 
     def create_bond(self, model, user, recipe):
-        model.objects.get_or_create(user=user, recipe=recipe)
+        if model.objects.filter(user=user, recipe=recipe).exists():
+            return Response({
+                'errors': 'Рецепт уже добавлен'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        model.objects.create(user=user, recipe=recipe)
         serializer = MiniRecipeSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -76,12 +83,9 @@ class RecipeViewSet(ModelViewSet):
         if bond.exists():
             bond.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            {
-                "detail": "Объект уже удалён"
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({
+            'errors': 'Рецепт уже удалён'
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     def do_action(self, request, model, pk):
         user = request.user
