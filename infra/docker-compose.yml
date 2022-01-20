@@ -22,7 +22,7 @@ services:
       context: ../backend
       dockerfile: Dockerfile
 
-    restart: always
+#    restart: always
 
     volumes:
       - ../backend/:/app/
