@@ -14,6 +14,10 @@ from users.models import Follow
 
 User = get_user_model()
 
+follow_twice_error = "Вы уже подписаны на автора"
+self_follow_error = "Нельзя подписаться на самого себя"
+follow_not_exist_error = "Подписки нет"
+
 
 class CustomUserViewSet(UserViewSet):
     pagination_class = CustomPageNumberPagination
@@ -30,13 +34,13 @@ class CustomUserViewSet(UserViewSet):
             if user == author:
                 return Response(
                     {
-                        'errors': 'Нельзя подписаться на самого себя'
-                    }
+                        "errors": self_follow_error
+                    }, status=status.HTTP_400_BAD_REQUEST
                 )
             if Follow.objects.filter(user=user, author=author).exists():
                 return Response(
                     {
-                        "errors": "Вы уже подписаны на автора"
+                        "errors": follow_twice_error
                     }, status=status.HTTP_400_BAD_REQUEST
                 )
             follow = Follow.objects.create(user=user, author=author)
@@ -50,9 +54,11 @@ class CustomUserViewSet(UserViewSet):
             if follow.exists():
                 follow.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response({
-                'errors': 'Подписки нет'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "errors": follow_not_exist_error
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
 
     @action(
         detail=False,
