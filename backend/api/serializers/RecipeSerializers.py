@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from api.models import Recipe, Ingredient, IngredientAmountForRecipe, Favorite
+from api.models import Recipe, Ingredient, IngredientAmountForRecipe
 from api.serializers import TagSerializer, IngredientAmountForRecipeSerializer
 from users.serializers import CustomUserSerializer
 
