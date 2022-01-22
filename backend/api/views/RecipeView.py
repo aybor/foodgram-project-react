@@ -16,6 +16,7 @@ from api.serializers import MiniRecipeSerializer, RecipeSerializer
 recipe_already_exists_msg = 'Рецепт уже добавлен'
 recipe_already_deleted_msg = 'Рецепт уже удалён'
 
+
 class RecipeViewSet(ModelViewSet):
     permission_classes = (AuthorOrReadOnly,)
     queryset = Recipe.objects.all()

@@ -4,9 +4,6 @@ import api.serializers
 from api.models import Recipe
 from users.models import Follow
 
-# from api.serializers import MiniRecipeSerializer
-
-
 
 class FollowSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='author.id')

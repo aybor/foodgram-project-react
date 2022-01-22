@@ -68,7 +68,9 @@ class RecipeAPITests(APITransactionTestCase):
 
         cls.json_data = json.dumps(cls.test_recipe_data)
         cls.json_changed_data = json.dumps(cls.changed_test_recipe_data)
-        cls.wrong_json_data = json.dumps(cls.test_recipe_data_without_ingr_tags)
+        cls.wrong_json_data = json.dumps(
+            cls.test_recipe_data_without_ingr_tags
+        )
 
         cls.correct_recipe_keys = [
             'id',
@@ -312,9 +314,3 @@ class RecipeAPITests(APITransactionTestCase):
             data={}
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-

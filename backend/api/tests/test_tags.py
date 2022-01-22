@@ -72,6 +72,3 @@ class TagsAPITests(APITransactionTestCase):
     def test_not_existing_tag_returns_404(self):
         response = self.client.get(self.not_existing_tag)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-
-

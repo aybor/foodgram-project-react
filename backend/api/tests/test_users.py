@@ -146,4 +146,3 @@ class UsersAPITests(APITransactionTestCase):
         self.create_and_authorize_user()
         response = self.client.get(self.not_existing_user_profile)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-

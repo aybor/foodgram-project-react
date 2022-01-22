@@ -28,7 +28,9 @@ class RecipeSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
         if user.is_authenticated:
-            return Recipe.objects.filter(favorites__user=user, id=obj.id).exists()
+            return Recipe.objects.filter(
+                favorites__user=user, id=obj.id
+            ).exists()
         return False
 
     def get_is_in_shopping_cart(self, obj):
@@ -101,7 +103,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         tags_data = self.initial_data.get('tags')
         instance.tags.set(tags_data)
-        IngredientAmountForRecipe.objects.filter(recipe=instance).all().delete()
+        IngredientAmountForRecipe.objects.filter(
+            recipe=instance
+        ).all().delete()
         self.create_ingredients(validated_data.get('ingredients'), instance)
         instance.save()
         return instance
