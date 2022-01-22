@@ -13,6 +13,8 @@ from api.paginators import CustomPageNumberPagination
 from api.filters import RecipeFilter
 from api.permissions import AuthorOrReadOnly
 
+recipe_already_exists_msg = 'Рецепт уже добавлен'
+recipe_already_deleted_msg = 'Рецепт уже удалён'
 
 class RecipeViewSet(ModelViewSet):
     permission_classes = (AuthorOrReadOnly,)
@@ -72,7 +74,7 @@ class RecipeViewSet(ModelViewSet):
     def create_bond(self, model, user, recipe):
         if model.objects.filter(user=user, recipe=recipe).exists():
             return Response({
-                'errors': 'Рецепт уже добавлен'
+                'errors': recipe_already_exists_msg
             }, status=status.HTTP_400_BAD_REQUEST)
         model.objects.create(user=user, recipe=recipe)
         serializer = MiniRecipeSerializer(recipe)
@@ -84,7 +86,7 @@ class RecipeViewSet(ModelViewSet):
             bond.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({
-            'errors': 'Рецепт уже удалён'
+            'errors': recipe_already_deleted_msg
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def do_action(self, request, model, pk):
