@@ -38,6 +38,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return False
 
     def validate(self, data):
+
         self.check_required_field('ingredients')
         self.check_required_field('tags')
 
