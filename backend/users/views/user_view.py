@@ -57,6 +57,7 @@ class CustomUserViewSet(UserViewSet):
                     "errors": follow_not_exist_error
                 }, status=status.HTTP_400_BAD_REQUEST
             )
+        return Response(status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
         detail=False,
