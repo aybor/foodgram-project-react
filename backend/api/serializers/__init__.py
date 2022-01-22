@@ -1,6 +1,7 @@
-from .IngredientSerializers import IngredientSerializer, IngredientAmountForRecipeSerializer
+from .IngredientSerializers import (IngredientAmountForRecipeSerializer,
+                                    IngredientSerializer)
+from .RecipeSerializers import MiniRecipeSerializer, RecipeSerializer
 from .TagSerializers import TagSerializer
-from .RecipeSerializers import RecipeSerializer, MiniRecipeSerializer
 
 __all__ = [
     'IngredientSerializer',

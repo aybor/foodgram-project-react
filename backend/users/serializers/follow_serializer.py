@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 import api.serializers
 from api.models import Recipe
+from users.models import Follow
+
 # from api.serializers import MiniRecipeSerializer
 
-from users.models import Follow
 
 
 class FollowSerializer(serializers.ModelSerializer):

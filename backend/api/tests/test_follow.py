@@ -1,14 +1,12 @@
 import json
 
 from django.contrib.auth.models import User
-
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 
-from users.views.user_view import (follow_twice_error,
-                                   self_follow_error,
-                                   follow_not_exist_error)
+from users.views.user_view import (follow_not_exist_error, follow_twice_error,
+                                   self_follow_error)
 
 
 class UsersAPITests(APITestCase):

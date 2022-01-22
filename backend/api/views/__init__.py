@@ -1,6 +1,6 @@
 from .IngredientView import IngredientsViewSet
-from .TagView import TagViewSet
 from .RecipeView import RecipeViewSet
+from .TagView import TagViewSet
 
 __all__ = [
     'IngredientsViewSet',

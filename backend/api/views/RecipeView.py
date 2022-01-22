@@ -7,11 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from api.serializers import RecipeSerializer, MiniRecipeSerializer
-from api.models import Recipe, Favorite, Cart
-from api.paginators import CustomPageNumberPagination
 from api.filters import RecipeFilter
+from api.models import Cart, Favorite, Recipe
+from api.paginators import CustomPageNumberPagination
 from api.permissions import AuthorOrReadOnly
+from api.serializers import MiniRecipeSerializer, RecipeSerializer
 
 recipe_already_exists_msg = 'Рецепт уже добавлен'
 recipe_already_deleted_msg = 'Рецепт уже удалён'
