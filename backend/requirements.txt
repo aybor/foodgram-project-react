@@ -10,3 +10,5 @@ djoser
 tqdm
 Pillow
 django-extra-fields
+isort
+flake8
