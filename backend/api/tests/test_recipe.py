@@ -5,11 +5,9 @@ import tempfile
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import override_settings
-
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
-
 
 from api.models import Ingredient, Tag
 

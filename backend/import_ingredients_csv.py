@@ -6,7 +6,9 @@
 """
 
 import csv
+
 from tqdm import tqdm
+
 from api.models import Ingredient
 
 CSV_PATH = './ingredients.csv'
