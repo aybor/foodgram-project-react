@@ -301,6 +301,20 @@ class RecipeAPITests(APITransactionTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_validation_for_patch(self):
+        self.authorize_user(self.token)
+        self.client.post(
+            self.recipes_endpoint,
+            content_type='application/json',
+            data=self.json_data
+        )
+        response = self.client.patch(
+            self.recipes_detail_endpoint,
+            content_type='application/json',
+            data={}
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 
 
