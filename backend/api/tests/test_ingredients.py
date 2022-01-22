@@ -35,10 +35,8 @@ class TagsAPITests(APITransactionTestCase):
         cls.search_str = cls.ingredient_data['name'][0:2]
 
         cls.search_url = cls.ingredients_endpoint + f'?name={cls.search_str}'
-        cls.search_url_not_exists = (
-            cls.ingredients_endpoint
-            + '?name=not_exists'
-        )
+        cls.search_url_not_exists = (cls.ingredients_endpoint
+                                     + '?name=not_exists')
 
     def create_ingredient(self):
         Ingredient.objects.create(
