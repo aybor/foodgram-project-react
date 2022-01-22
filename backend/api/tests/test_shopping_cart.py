@@ -10,7 +10,6 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
 
-
 from api.models import (Ingredient, Tag)
 from api.views.RecipeView import (recipe_already_deleted_msg,
                                   recipe_already_exists_msg)
@@ -31,9 +30,10 @@ class RecipeAPITests(APITransactionTestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.favorite_url = "/api/recipes/1/favorite/"
-        cls.not_existing_url = "/api/recipes/2/favorite/"
+        cls.shopping_url = "/api/recipes/1/shopping_cart/"
+        cls.not_existing_url = "/api/recipes/2/shopping_cart/"
         cls.recipes_endpoint = '/api/recipes/'
+        cls.download_cart_url = '/api/recipes/download_shopping_cart/'
 
         cls.test_recipe_data = {
             "ingredients": [{"id": 1, "amount": 10}],
@@ -56,10 +56,12 @@ class RecipeAPITests(APITransactionTestCase):
             'cooking_time'
         ]
 
-        cls.already_favorite = {
+        cls.download_text = b'test_ingredient: 10 test\n'
+
+        cls.already_in_cart = {
             'errors': recipe_already_exists_msg
         }
-        cls.already_deleted = {
+        cls.already_not_in_cart = {
             'errors': recipe_already_deleted_msg
         }
 
@@ -72,7 +74,6 @@ class RecipeAPITests(APITransactionTestCase):
         self.client.credentials(HTTP_AUTHORIZATION="")
 
     def setUp(self):
-
         self.user = User.objects.create_user(
             email='vpupkin@yandex.ru',
             username='vasya.pupkin',
@@ -101,44 +102,58 @@ class RecipeAPITests(APITransactionTestCase):
         )
         self.unauthorize_user()
 
-    def test_favorite_not_allow_for_anonymous(self):
-        response = self.client.post(self.favorite_url)
+    def test_shopping_not_allowed_for_anonymous(self):
+        response = self.client.post(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_favorite_allow_for_authorized(self):
+    def test_shopping_allowed_for_authorized(self):
         self.authorize_user(self.token)
-        response = self.client.post(self.favorite_url)
+        response = self.client.post(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         response_keys = json.loads(response.content).keys()
         for field in self.success_response_fields:
             with self.subTest(field=field):
                 self.assertIn(field, response_keys)
 
-    def test_error_if_already_favorite(self):
+    def test_not_add_to_cart_twice(self):
         self.authorize_user(self.token)
-        self.client.post(self.favorite_url)
-        response = self.client.post(self.favorite_url)
+        self.client.post(self.shopping_url)
+        response = self.client.post(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             json.loads(response.content),
-            self.already_favorite
+            self.already_in_cart
         )
 
-    def test_del_favorite_not_allowfor_anonymus(self):
-        response = self.client.delete(self.favorite_url)
+    def test_del_cart_not_allowed_for_anonymous(self):
+        response = self.client.delete(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_del_favorite_allow_for_authorized(self):
+    def test_del_cart_allowed_for_authorized(self):
         self.authorize_user(self.token)
-        self.client.post(self.favorite_url)
-        response = self.client.delete(self.favorite_url)
+        self.client.post(self.shopping_url)
+        response = self.client.delete(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_error_if_already_deleted(self):
+    def test_not_del_from_cart_twice(self):
         self.authorize_user(self.token)
-        response = self.client.delete(self.favorite_url)
+        response = self.client.delete(self.shopping_url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             json.loads(response.content),
-            self.already_deleted
+            self.already_not_in_cart
         )
+
+    def test_download_not_allowed_for_anonymous(self):
+        self.authorize_user(self.token)
+        self.client.post(self.shopping_url)
+        self.unauthorize_user()
+        response = self.client.get(self.download_cart_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_download_allowed_for_authorized(self):
+        self.authorize_user(self.token)
+        self.client.post(self.shopping_url)
+        response = self.client.get(self.download_cart_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, self.download_text)

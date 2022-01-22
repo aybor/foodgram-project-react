@@ -4,6 +4,7 @@ import tempfile
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.test import override_settings
 
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -17,6 +18,7 @@ from api.models import (Ingredient,
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class RecipeAPITests(APITransactionTestCase):
     reset_sequences = True
 
