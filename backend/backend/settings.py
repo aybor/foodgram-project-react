@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+#обнови секреты
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE'),
