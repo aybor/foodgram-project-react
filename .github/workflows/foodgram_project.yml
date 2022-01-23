@@ -40,4 +40,5 @@ jobs:
         DEBUG: 1
         ALLOWED_HOSTS: "*"
       run: |
+        python backend/manage.py migrate
         python backend/manage.py test
