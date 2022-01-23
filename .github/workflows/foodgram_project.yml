@@ -8,6 +8,18 @@ jobs:
     # «Раннер» — создание изолированного окружения с последней версией Ubuntu
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
     # Запуск actions checkout — готового скрипта
     # для клонирования репозитория
@@ -34,11 +46,22 @@ jobs:
         # запуск проверки проекта по flake8
         flake8
 
-    - name: Test with django unittest
+    - name: Run migrations
       env:
-        DJANGO_SETTINGS_MODULE: backend.settings_workflow_test
+        DJANGO_SETTINGS_MODULE: backend.settings
         DEBUG: 1
         ALLOWED_HOSTS: "*"
       run: |
         python backend/manage.py migrate
+
+    - name: Test with django unittest
+      env:
+        DJANGO_SETTINGS_MODULE: backend.settings
+        DB_ENGINE: ${{ secrets.DB_ENGINE }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+      run: |
         python backend/manage.py test
