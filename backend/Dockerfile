@@ -9,4 +9,4 @@ RUN pip3 install --upgrade pip
 
 COPY . .
 
-RUN pip3 install -r requirements.txt --no-cache-dir
+RUN pip3 install -r backend/requirements.txt --no-cache-dir
