@@ -152,7 +152,7 @@ class RecipeAPITests(APITransactionTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_recipe_not_allowed_for_anonymous(self):
+    def test_get_recipe_allowed_for_anonymous(self):
         self.authorize_user(self.token)
         self.client.post(
             self.recipes_endpoint,
@@ -161,7 +161,7 @@ class RecipeAPITests(APITransactionTestCase):
         )
         self.unauthorize_user()
         response = self.client.get(self.recipes_detail_endpoint)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_recipe_allowed_for_authorized(self):
         self.authorize_user(self.token)

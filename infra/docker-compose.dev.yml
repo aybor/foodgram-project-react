@@ -13,7 +13,7 @@ services:
   frontend:
     build:
       context: ../frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -25,7 +25,6 @@ services:
     volumes:
       - ../backend/:/app/
       - media_value:/app/media/
-
 
     depends_on:
       - db

@@ -85,7 +85,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker-compose stop
-            sudo docker-compose rm infra_django_1
+            sudo docker-compose pull
             rm .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
@@ -96,6 +96,6 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             sudo docker-compose up -d
-            sudo docker-compose exec -T infra_django_1 python manage.py makemigrations --noinput
-            sudo docker-compose exec -T infra_django_1 python manage.py migrate --noinput
-            sudo docker-compose exec -T infra_django_1 python manage.py collectstatic --no-input
+            sudo docker-compose exec -T ubuntu_django_1 python manage.py makemigrations --noinput
+            sudo docker-compose exec -T ubuntu_django_1 python manage.py migrate --noinput
+            sudo docker-compose exec -T ubuntu_django_1 python manage.py collectstatic --no-input

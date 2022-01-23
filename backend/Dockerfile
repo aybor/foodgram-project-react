@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM arm64v8/python:3.7-slim
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ RUN pip3 install --upgrade pip
 
 COPY . .
 
-RUN pip3 install -r backend/requirements.txt --no-cache-dir
+RUN pip3 install -r requirements.txt --no-cache-dir
