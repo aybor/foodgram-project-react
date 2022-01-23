@@ -33,3 +33,11 @@ jobs:
       run: |
         # запуск проверки проекта по flake8
         flake8
+
+    - name: Test with django unittest
+      env:
+        DJANGO_SETTINGS_MODULE: backend.settings_workflow_test
+        DEBUG: 1
+        ALLOWED_HOSTS: "*"
+      run: |
+        python backend/backend/manage.py test

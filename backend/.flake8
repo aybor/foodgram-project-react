@@ -1,2 +1,2 @@
 [flake8]
-exclude = .git,settings.py,settings_dev.py,migrations
+exclude = .git,settings.py,settings_dev.py,settings_workflow_test.py,migrations
