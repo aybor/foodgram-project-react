@@ -18,9 +18,7 @@ services:
       - ../frontend/:/app/result_build/
 
   django:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
+    image: aybor/foodgram-project-react
 
     restart: always
 
@@ -28,7 +26,7 @@ services:
       - static_value:/app/static/
       - media_value:/app/media/
 
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    command: "sh -c 'gunicorn backend.backend.wsgi:application --bind 0.0.0.0:8000'"
 
     depends_on:
       - db
