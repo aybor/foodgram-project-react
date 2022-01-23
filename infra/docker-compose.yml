@@ -11,9 +11,7 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: aybor/foodgram-frontend
     volumes:
       - ../frontend/:/app/result_build/
 
