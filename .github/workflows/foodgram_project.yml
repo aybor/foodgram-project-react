@@ -46,4 +46,4 @@ jobs:
       env:
         DJANGO_SETTINGS_MODULE: backend.settings
       run: |
-        python backend/manage.py test
+        python backend/manage.py test api
