@@ -85,6 +85,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker-compose stop
+            sudo docker-compose rm ubuntu_django_1
             sudo docker-compose pull
             rm .env
             touch .env
