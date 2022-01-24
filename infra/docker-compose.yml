@@ -2,6 +2,7 @@ version: '3.3'
 services:
 
   db:
+    container_name: postgres
     image: postgres:13-alpine
     ports:
       - "5432:5432"
@@ -11,11 +12,13 @@ services:
       - ./.env
 
   frontend:
+    container_name: frontend
     image: aybor/foodgram-frontend
     volumes:
       - ../frontend/:/app/result_build/
 
   django:
+    container_name: backend
     image: aybor/foodgram-project-react
 
     restart: always
@@ -24,7 +27,7 @@ services:
       - static_value:/app/static/
       - media_value:/app/media/
 
-    command: "sh -c 'cd backend && gunicorn backend.wsgi:application --bind 0.0.0.0:8000'"
+    command: "sh -c 'gunicorn backend.wsgi:application --bind 0.0.0.0:8000'"
 
     depends_on:
       - db
@@ -32,6 +35,7 @@ services:
       - ./.env
 
   nginx:
+    container_name: nginx
     image: nginx:1.19.3
     ports:
       - "80:80"
