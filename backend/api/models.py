@@ -32,22 +32,15 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    COLOR_CHOICES = [
-        ('#DB4035', 'Красный'),
-        ('#FAD000', 'Желтый'),
-        ('#299438', 'Зелёный'),
-        ('#4073FF', 'Синий'),
-        ('#AF38EB', 'Фиолетовый'),
-    ]
+
     name = models.CharField(
         max_length=200,
         unique=True,
         verbose_name='Имя тега',
     )
-    color = models.CharField(
+    color = models.TextField(
         max_length=7,
         unique=True,
-        choices=COLOR_CHOICES,
         verbose_name='Цвет',
     )
     slug = models.SlugField(

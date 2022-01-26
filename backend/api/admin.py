@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.forms import ModelForm
+from django.forms.widgets import TextInput
 
 from .models import (Cart,
                      Favorite,
@@ -7,6 +9,15 @@ from .models import (Cart,
                      Tag,
                      IngredientAmountForRecipe,
                      )
+
+
+class TagForm(ModelForm):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+        widgets = {
+            'color': TextInput(attrs={'type': 'color'}),
+        }
 
 
 @admin.register(Ingredient)
@@ -21,6 +32,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
+    form = TagForm
     list_display = (
         'pk',
         'name',
