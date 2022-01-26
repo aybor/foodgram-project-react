@@ -110,9 +110,15 @@ class RecipeAPITests(APITransactionTestCase):
         cls.wrong_json_data = json.dumps(
             cls.test_recipe_data_without_ingr_tags
         )
-        cls.negative_amount_data = json.dumps(cls.test_recipe_data_with_negative_amount)
-        cls.zero_amount_data = json.dumps(cls.test_recipe_data_with_zero_amount)
-        cls.repeated_amount_data = json.dumps(cls.test_recipe_data_with_repeating_ingredient)
+        cls.negative_amount_data = json.dumps(
+            cls.test_recipe_data_with_negative_amount
+        )
+        cls.zero_amount_data = json.dumps(
+            cls.test_recipe_data_with_zero_amount
+        )
+        cls.repeated_amount_data = json.dumps(
+            cls.test_recipe_data_with_repeating_ingredient
+        )
 
         cls.correct_recipe_keys = [
             'id',
