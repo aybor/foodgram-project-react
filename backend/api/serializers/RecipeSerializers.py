@@ -54,12 +54,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
             if ingredient_item in ingredient_list:
                 raise serializers.ValidationError(
-                    {'ingredients': 'Указаны повторяющиеся ингредиенты'}
+                    {
+                        'ingredients': 'Указаны повторяющиеся ингредиенты'
+                    }
                 )
             ingredient_list.append(ingredient_item)
-            if int(ingredient['amount']) < 0:
+            if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError(
-                    {'ingredients': 'Количество должно быть положительным'}
+                    {
+                        'ingredients': 'Количество должно быть больше 0'
+                    }
                 )
         data['ingredients'] = ingredients
         return data
@@ -69,7 +73,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         if not checking_field:
             raise serializers.ValidationError(
                 {
-                    field: 'This field is required.'
+                    field: 'Обязательное поле.'
                 }
             )
 

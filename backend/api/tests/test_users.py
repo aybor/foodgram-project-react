@@ -70,8 +70,8 @@ class UsersAPITests(APITransactionTestCase):
         }
 
         cls.error_msg_for_duplicate_user = {
-            "email": ["This field must be unique."],
-            "username": ["This field must be unique."]
+            "email": ["Значения поля должны быть уникальны."],
+            "username": ["Значения поля должны быть уникальны."]
         }
 
     def create_user(self):

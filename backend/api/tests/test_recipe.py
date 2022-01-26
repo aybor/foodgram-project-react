@@ -66,11 +66,53 @@ class RecipeAPITests(APITransactionTestCase):
             "cooking_time": 1
         }
 
+        cls.test_recipe_data_with_negative_amount = {
+            "ingredients": [{"id": 1, "amount": -10}],
+            "tags": [1],
+            "image": "data:image/png;"
+                     "base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAA"
+                     "AACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4"
+                     "bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+            "name": "test_string",
+            "text": "test_string",
+            "cooking_time": 1
+        }
+
+        cls.test_recipe_data_with_zero_amount = {
+            "ingredients": [{"id": 1, "amount": 0}],
+            "tags": [1],
+            "image": "data:image/png;"
+                     "base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAA"
+                     "AACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4"
+                     "bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+            "name": "test_string",
+            "text": "test_string",
+            "cooking_time": 1
+        }
+
+        cls.test_recipe_data_with_repeating_ingredient = {
+            "ingredients": [
+                {"id": 1, "amount": 10},
+                {"id": 1, "amount": 10}
+            ],
+            "tags": [1],
+            "image": "data:image/png;"
+                     "base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAA"
+                     "AACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4"
+                     "bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+            "name": "test_string",
+            "text": "test_string",
+            "cooking_time": 1
+        }
+
         cls.json_data = json.dumps(cls.test_recipe_data)
         cls.json_changed_data = json.dumps(cls.changed_test_recipe_data)
         cls.wrong_json_data = json.dumps(
             cls.test_recipe_data_without_ingr_tags
         )
+        cls.negative_amount_data = json.dumps(cls.test_recipe_data_with_negative_amount)
+        cls.zero_amount_data = json.dumps(cls.test_recipe_data_with_zero_amount)
+        cls.repeated_amount_data = json.dumps(cls.test_recipe_data_with_repeating_ingredient)
 
         cls.correct_recipe_keys = [
             'id',
@@ -86,10 +128,16 @@ class RecipeAPITests(APITransactionTestCase):
         ]
 
         cls.validation_error_response = {
-            "name": ["This field is required."],
-            "image": ["No file was submitted."],
-            "text": ["This field is required."],
-            "cooking_time": ["This field is required."]
+            "name": ["Обязательное поле."],
+            "image": ["Ни одного файла не было отправлено."],
+            "text": ["Обязательное поле."],
+            "cooking_time": ["Обязательное поле."]
+        }
+        cls.validation_less_equal_zero_amount_response = {
+            "ingredients": ["Количество должно быть больше 0"]
+        }
+        cls.validation_repeat_error = {
+            "ingredients": ["Указаны повторяющиеся ингредиенты"]
         }
 
     def authorize_user(self, token):
@@ -197,6 +245,45 @@ class RecipeAPITests(APITransactionTestCase):
         self.assertEqual(
             json.loads(response.content),
             self.validation_error_response
+        )
+
+    def test_validation_zero_amount_ingredient(self):
+        self.authorize_user(self.token)
+        response = self.client.post(
+            self.recipes_endpoint,
+            content_type='application/json',
+            data=self.zero_amount_data,
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            json.loads(response.content),
+            self.validation_less_equal_zero_amount_response
+        )
+
+    def test_validation_negative_amount_ingredient(self):
+        self.authorize_user(self.token)
+        response = self.client.post(
+            self.recipes_endpoint,
+            data=self.negative_amount_data,
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            json.loads(response.content),
+            self.validation_less_equal_zero_amount_response
+        )
+
+    def test_validation_repeat_ingredients_ingredient(self):
+        self.authorize_user(self.token)
+        response = self.client.post(
+            self.recipes_endpoint,
+            data=self.repeated_amount_data,
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            json.loads(response.content),
+            self.validation_repeat_error
         )
 
     def test_404_for_null_recipe(self):
