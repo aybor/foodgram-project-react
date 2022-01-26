@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
+from django.utils.text import slugify
 
 User = get_user_model()
 
@@ -96,6 +97,12 @@ class Recipe(models.Model):
         ),
         verbose_name='Время приготовления'
     )
+
+    slug = models.SlugField(null=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Recipe, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-id']
