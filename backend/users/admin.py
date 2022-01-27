@@ -16,12 +16,26 @@ class CustomUserAdmin(UserAdmin):
         'first_name',
         'last_name',
     )
+    search_fields = (
+        'email',
+        'username',
+        'first_name',
+        'last_name',
+    )
 
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
+        'user',
+        'author',
+    )
+    search_fields = (
+        'user',
+        'author',
+    )
+    list_filter = (
         'user',
         'author',
     )

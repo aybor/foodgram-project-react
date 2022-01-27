@@ -7,8 +7,7 @@ from .models import (Cart,
                      Ingredient,
                      Recipe,
                      Tag,
-                     IngredientAmountForRecipe,
-                     )
+                     IngredientAmountForRecipe,)
 
 
 class TagForm(ModelForm):
@@ -28,6 +27,7 @@ class IngredientAdmin(admin.ModelAdmin):
         'measurement_unit',
     )
     search_fields = ('name',)
+    list_filter = ('measurement_unit',)
 
 
 @admin.register(Tag)
@@ -37,6 +37,15 @@ class TagAdmin(admin.ModelAdmin):
         'pk',
         'name',
         'color',
+        'slug',
+    )
+    search_fields = (
+        'name',
+        'slug',
+    )
+    list_filter = (
+        'color',
+        'name',
         'slug',
     )
 
@@ -69,6 +78,11 @@ class FavoriteAdmin(admin.ModelAdmin):
         'user',
         'recipe',
     )
+    search_fields = (
+        'user',
+        'recipe',
+    )
+    list_filter = ('user',)
 
 
 @admin.register(Cart)
@@ -78,6 +92,11 @@ class CartAdmin(admin.ModelAdmin):
         'user',
         'recipe',
     )
+    search_fields = (
+        'user',
+        'recipe',
+    )
+    list_filter = ('user',)
 
 
 @admin.register(IngredientAmountForRecipe)
