@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
-from django.utils.text import slugify
+
+from slugify import slugify
 
 User = get_user_model()
 

@@ -12,3 +12,4 @@ Pillow
 django-extra-fields
 flake8
 isort
+python-slugify
