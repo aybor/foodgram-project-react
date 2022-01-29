@@ -51,6 +51,16 @@ services:
       - django
       - frontend
 
+#  certbot:
+#    image: certbot/certbot
+#    entrypoint: /bin/sh -c
+#    command:
+#      - sleep 10000
+##    command:
+##      - certbot certonly --manual --preferred-challenges dns --agree-tos -m borisov_aleks@mail.ru -d foodgram-aybor.tk && mv /etc/letsencrypt/archive/* /certs
+#    volumes:
+#      - ./certs:/certs
+
 volumes:
   postgres_data:
   static_value:

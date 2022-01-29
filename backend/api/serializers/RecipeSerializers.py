@@ -55,14 +55,14 @@ class RecipeSerializer(serializers.ModelSerializer):
             if ingredient_item in ingredient_list:
                 raise serializers.ValidationError(
                     {
-                        'ingredients': 'Указаны повторяющиеся ингредиенты'
+                        ingredient_item.name: f'{ingredient_item.name} указано несколько раз'
                     }
                 )
             ingredient_list.append(ingredient_item)
             if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError(
                     {
-                        'ingredients': 'Количество должно быть больше 0'
+                        ingredient_item.name: f'Количество {ingredient_item.name} должно быть больше 0'
                     }
                 )
         data['ingredients'] = ingredients
@@ -78,16 +78,22 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
 
     def create_ingredients(self, ingredients, recipe):
-        ingredients_list = []
+        # ingredients_list = []
+        # for ingredient in ingredients:
+        #     ingredients_list.append(
+        #         IngredientAmountForRecipe(
+        #             recipe=recipe,
+        #             ingredient_id=ingredient.get('id'),
+        #             amount=ingredient.get('amount')
+        #         )
+        #     )
+        # IngredientAmountForRecipe.objects.bulk_create(ingredients_list)
         for ingredient in ingredients:
-            ingredients_list.append(
-                IngredientAmountForRecipe(
-                    recipe=recipe,
-                    ingredient_id=ingredient.get('id'),
-                    amount=ingredient.get('amount')
-                )
+            IngredientAmountForRecipe.objects.create(
+                recipe=recipe,
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient.get('amount'),
             )
-        IngredientAmountForRecipe.objects.bulk_create(ingredients_list)
 
     def create(self, validated_data):
         image = validated_data.pop('image')

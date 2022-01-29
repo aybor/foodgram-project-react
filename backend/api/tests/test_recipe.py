@@ -140,10 +140,10 @@ class RecipeAPITests(APITransactionTestCase):
             "cooking_time": ["Обязательное поле."]
         }
         cls.validation_less_equal_zero_amount_response = {
-            "ingredients": ["Количество должно быть больше 0"]
+            "test_ingredient": ["Количество test_ingredient должно быть больше 0"]
         }
         cls.validation_repeat_error = {
-            "ingredients": ["Указаны повторяющиеся ингредиенты"]
+            "test_ingredient": ["test_ingredient указано несколько раз"]
         }
 
     def authorize_user(self, token):
