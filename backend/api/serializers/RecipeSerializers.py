@@ -94,7 +94,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
         IngredientAmountForRecipe.objects.bulk_create(ingredients_list)
 
-
     def create(self, validated_data):
         image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
