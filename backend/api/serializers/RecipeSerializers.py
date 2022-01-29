@@ -55,14 +55,17 @@ class RecipeSerializer(serializers.ModelSerializer):
             if ingredient_item in ingredient_list:
                 raise serializers.ValidationError(
                     {
-                        ingredient_item.name: f'{ingredient_item.name} указано несколько раз'
+                        ingredient_item.name: f'{ingredient_item.name}'
+                                              f'указано несколько раз'
                     }
                 )
             ingredient_list.append(ingredient_item)
             if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError(
                     {
-                        ingredient_item.name: f'Количество {ingredient_item.name} должно быть больше 0'
+                        ingredient_item.name: f'Количество'
+                                              f'{ingredient_item.name}'
+                                              f'должно быть больше 0'
                     }
                 )
         data['ingredients'] = ingredients
