@@ -1,3 +1,4 @@
 /backend/Dockerfile
 /backend/Dockerfile_dev
 /backend/backend/settings_dev.py
+/infra/certs/
