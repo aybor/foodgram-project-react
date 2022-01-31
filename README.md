@@ -50,10 +50,4 @@ Cайт, на котором пользователи будут публико�
 #Работающий проект
 Проект доступен по адресу http://foodgram-aybor.tk/ или по IP: http://140.238.175.119/
 
-Администратор:
-+ email: admin@admin.ru
-+ username: admin
-+ password: qwedcxzas
-
-
 [![Django-app workflow](https://github.com/aybor/foodgram-project-react/actions/workflows/foodgram_project.yml/badge.svg)](https://github.com/aybor/foodgram-project-react/actions/workflows/foodgram_project.yml)
