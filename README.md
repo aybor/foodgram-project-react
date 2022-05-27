@@ -46,8 +46,3 @@ Cайт, на котором пользователи будут публико�
 + ```DJANGO_SETTINGS_MODULE=backend.settings_dev```
 
 При отладке в PyCharm используется встроенный сервер Django.
-
-#Работающий проект
-Проект доступен по адресу http://foodgram-aybor.tk/ или по IP: http://140.238.175.119/
-
-[![Django-app workflow](https://github.com/aybor/foodgram-project-react/actions/workflows/foodgram_project.yml/badge.svg)](https://github.com/aybor/foodgram-project-react/actions/workflows/foodgram_project.yml)
